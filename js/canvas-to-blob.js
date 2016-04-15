@@ -84,7 +84,7 @@
       bb.append(arrayBuffer)
       return bb.getBlob(mediaType)
     }
-  if (window.HTMLCanvasElement && !CanvasPrototype.toBlob) {
+  if (window.HTMLCanvasElement && (!CanvasPrototype.toBlob || looksLikeChrome())) {
     if (CanvasPrototype.mozGetAsFile) {
       CanvasPrototype.toBlob = function (callback, type, quality) {
         if (quality && CanvasPrototype.toDataURL && dataURLtoBlob) {
@@ -99,6 +99,11 @@
       }
     }
   }
+
+  function looksLikeChrome() {
+    return !!window.chrome && !!window.chrome.webstore;
+  }
+
   if (typeof define === 'function' && define.amd) {
     define(function () {
       return dataURLtoBlob
